@@ -2,7 +2,7 @@
 
 ## Utilisation
 
-Démarrage de l'api
+Démarrage de l'API
 
 ```sh
 npm run start
@@ -20,35 +20,32 @@ Lancement des migrations
 npm run migration:run
 ````
 
-## Choix prix pour la conceptions du projet
+## Choix de conception pour le projet
 
-à partir de ma lecture de la problématique j'ai fait les choix de (dans un contexte en entreprise j'aurais demander validation avant le développement) :
+À partir de ma lecture de la problématique, j'ai fait les choix suivants (dans un contexte d'entreprise, j'aurais demandé une validation avant le développement) :
 
-- ne pas stocker le contenu de l'article mais juste le lien, le titre, la date et la source
-- de faire une solution qui ne s'adapte qu'à un site, car le formattage des sites est différent à chaque fois, on pourrait améliorer la solutions avec une analyse de formattage via un llm, ou alors proposer depuis l'input des selecteur CSS pour faire le scrapping.
-- un mauvais formattage d'un article ne stoppe pas la récupération
-- j'ai mis une limite à la récupération des articles
+- ne pas stocker le contenu de l'article, mais seulement le lien, le titre, la date et la source
+- créer une solution qui ne s'adapte qu'à un site, car le formatage des sites est différent à chaque fois. On pourrait améliorer la solution avec une analyse de formatage via un LLM, ou alors proposer des sélecteurs CSS depuis l'input pour faire le scraping.
+- un mauvais formatage d'un article ne stoppe pas la récupération j'ai mis une limite à la récupération des articles
+- ycombinator fournit les id de ses articles, j'ai pris cette donnée pour faire l'unicité des articles. Sinon j'aurais pu me baser sur l'url ou le titre, mais ils peuvent changer
 
-### Piste d'amélioration
+## Pistes d'amélioration
 
-- mettre des transactions, des retry, de l'idempotence : la solution n'est pas résiliante
-- un meilleur logger : remplacer console.log par winston
-- faire un docker
-- des tests d'intégration : db de test + supertest sur le controller
-- faire des inversion de dépendance entre le repo et le service
+- ajouter des transactions, des retry, de l'idempotence : la solution n'est pas résiliente. Ce qui fait qu'un cas n'est pas gérer : je fais un scrap, plus tard je fais un autre scrap mais il crash, alors il y a manque entre les deux scraps et en relancer un ne permettrait pas de combler ce manque.
+- un meilleur logger : remplacer console.log par Winston créer un Dockerfile
+- ajouter des tests d'intégration : base de données de test + Supertest sur le contrôleur
+- faire des inversions de dépendance entre le repo et le service
 
 ## Choix de performance
 
 ### Techniquement
 
-- (déjà fait) faire de la pagination par date de publication et non un offset,
-  - car le offset va forcer dans le query planner à récupérer tous les pages précédentes et donc parcourrir tous l'index jusqu'à trouver tous les éléments requêté
-- (déjà fait) un index composite sur le tri et la recherche
-  - si on commence l'index par la clé de tri alors la récupération dans l'index sera déjà trié, il n'y aura pas d'opérations supplémentaire à faire sur la db et pas de recherche inutile dans la db. Ensuite on met le titre dans l'index pour que le query planner puis faire la recherche en IndexScan et ne pas le faire en lisant la donnée sur disque.
-- (à faire) la recherche ILIKE n'est pas optimisé et n'est pas pertinente, il faudra utiliser un index GIST avec le mathode d'indexation par trigramme qui donne de bon résultat si on veut que ça soit pertinent et qui donne aussi de bonne performance
+- (déjà fait) faire de la pagination par date de publication et non par offset, car l'offset va forcer le query planner à récupérer toutes les pages précédentes et donc parcourir tout l'index jusqu'à trouver tous les éléments requis
+- (déjà fait) un index composite sur la source et ensuite sur la date de parution. J'ai considéré qu'on ne récupèrerait que les articles d'une source en même temps, dans le cas contraire on inverserait la position des deux attributs. L'attribut source est obligatoire pour chaque requête et date de parutions et l'attribut de tri, ce qui permet à la db de ne pas trier les données à la récupérations et de limiter la recherche dans l'index.
+- (à faire) la recherche ILIKE n'est pas optimisée et n'est pas pertinente. Il faudra utiliser un index GIST avec la méthode d'indexation par trigramme, qui donne de bons résultats si on veut que ce soit pertinent et qui offre aussi de bonnes performances.
 
 ### En fonction de l'usage de l'application
 
-- si on remarque que le niveau de lecture des anciens articles est très très bas, on peut faire une partition pour les vieux articles
+- si on remarque que le niveau de lecture des anciens articles est très bas, on peut faire une partition pour les vieux articles
 - avoir un duplica dédié à la lecture
-- si une requête ne récupère qu'un seul type de source alors on peut particionner par nombre de source... si le nombre de source est bas.
+- si une requête ne récupère qu'un seul type de source, alors on peut partitionner par nombre de sources... si le nombre de sources est bas.
