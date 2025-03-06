@@ -1,0 +1,49 @@
+{
+	"info": {
+		"_postman_id": "f62c1f7c-03fb-4555-96c3-eac3bacc4f9e",
+		"name": "FontsNinja",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "12951650"
+	},
+	"item": [
+		{
+			"name": "Articles",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/articles?source=ycombinator",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"articles"
+					],
+					"query": [
+						{
+							"key": "source",
+							"value": "ycombinator"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Scrap articles",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "mlkj",
+					"host": [
+						"mlkj"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
