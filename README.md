@@ -14,6 +14,12 @@ Lancement des tests
 npm run test
 ````
 
+Lancement des migrations
+
+```sh
+npm run migration:run
+````
+
 ## Choix prix pour la conceptions du projet
 
 à partir de ma lecture de la problématique j'ai fait les choix de (dans un contexte en entreprise j'aurais demander validation avant le développement) :
@@ -46,4 +52,3 @@ npm run test
 - si on remarque que le niveau de lecture des anciens articles est très très bas, on peut faire une partition pour les vieux articles
 - avoir un duplica dédié à la lecture
 - si une requête ne récupère qu'un seul type de source alors on peut particionner par nombre de source... si le nombre de source est bas.
-# fontsninja-test
