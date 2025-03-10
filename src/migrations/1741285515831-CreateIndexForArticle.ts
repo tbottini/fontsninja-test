@@ -11,9 +11,9 @@ export class CreateIndexForArticle1741278249343 implements MigrationInterface {
     `);
   }
 
-  public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(`
-        DROP INDEX idx_articles_source_publicationDate;
-      `);
-  }
+    public async down(queryRunner: QueryRunner): Promise<void> {
+      await queryRunner.query(`
+          DROP INDEX idx_articles_source_publicationDate ON article
+        `);
+    }
 }

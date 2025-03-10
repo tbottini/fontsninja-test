@@ -2,23 +2,47 @@
 
 ## Utilisation
 
-Démarrage de l'API
+Démarrage de l'API en dev
 
 ```sh
 npm run start
+```
+
+Démarrage de l'API en prod
+```sh
+npm run build && npm run start:prod
 ```
 
 Lancement des tests
 
 ```sh
 npm run test
-````
+```
 
 Lancement des migrations
 
 ```sh
 npm run migration:run
 ````
+
+
+### Via docker 
+
+Build 
+```sh
+docker build . -t fontsninja
+```
+
+Run
+```sh 
+docker run -p 3000:3000 -t fontsninja
+```
+
+Lancement des migrations 
+```
+docker run --add-host=host.docker.internal:host-gateway fonts-ninja npm run migration:run
+```
+
 
 ## Choix de conception pour le projet
 
